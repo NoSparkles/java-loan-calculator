@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" spacing="10" alignment="CENTER">
+    <Label text="Pageidaujama paskolos suma"/>
+    <TextField fx:id="loanAmount"/>
+
+    <Label text="Paskolos terminas"/>
+    <HBox spacing="10" alignment="CENTER">
+        <TextField fx:id="termYears" promptText="Metai"/>
+        <TextField fx:id="termMonths" promptText="Mėnesiai"/>
+    </HBox>
+
+    <Label text="Metinė palūkanų norma"/>
+    <TextField fx:id="annualRate" promptText="%"/>
+
+    <Label text="Paskolos grąžinimo grafikas"/>
+    <ChoiceBox fx:id="paymentSchedule">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Anuiteto"/>
+                <String fx:value="Linijinis"/>
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+
+    <Button text="Apskaičiuoti" onAction="#calculate"/>
+
+    <Label text="Mėnesinė įmoka"/>
+    <Label fx:id="monthlyPayment" text=""/>
+</VBox>
