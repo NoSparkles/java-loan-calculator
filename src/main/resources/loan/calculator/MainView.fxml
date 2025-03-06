@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -33,13 +35,21 @@
                </children>
             </HBox>
             <ChoiceBox fx:id="paymentSchedule" prefWidth="150.0" />
+            <Label text="Atidėjimas mėnesiais" />
+            <TextField />
             <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
-            <Label text="Mėnesinė įmoka" />
-            <Label fx:id="monthlyPayment" />
          </children>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </VBox>
+      <TableView fx:id="scheduleTable" layoutX="342.0" layoutY="13.0" prefHeight="575.0" prefWidth="388.0">
+        <columns>
+          <TableColumn fx:id="monthColumn" prefWidth="66.0" text="Mėnesis" />
+          <TableColumn fx:id="interestColumn" prefWidth="70.0" text="Palūkanos" />
+            <TableColumn fx:id="paymentColumn" prefWidth="119.0" text="Mėnesinė įmoka" />
+            <TableColumn fx:id="balanceColumn" prefWidth="145.0" text="Paskolos likutis" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

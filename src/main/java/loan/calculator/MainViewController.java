@@ -1,11 +1,14 @@
 package loan.calculator;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainViewController {
     @FXML private TextField loanAmount;
@@ -15,12 +18,22 @@ public class MainViewController {
     @FXML private ChoiceBox<String> paymentSchedule;
     @FXML private TextField delay;
     @FXML private Button calculateButton;
-    @FXML private Label monthlyPayment;
+
+    @FXML private TableView<PaymentSchedule> scheduleTable;
+    @FXML private TableColumn<PaymentSchedule, Integer> monthColumn;
+    @FXML private TableColumn<PaymentSchedule, Double> interestColumn;
+    @FXML private TableColumn<PaymentSchedule, Double> paymentColumn;
+    @FXML private TableColumn<PaymentSchedule, Double> balanceColumn;
 
     @FXML
     public void initialize() {
         paymentSchedule.setItems(FXCollections.observableArrayList("Anuiteto", "Linijinis"));
         paymentSchedule.setValue("Anuiteto");
+
+        monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        interestColumn.setCellValueFactory(new PropertyValueFactory<>("interestPayment"));
+        paymentColumn.setCellValueFactory(new PropertyValueFactory<>("totalPayment"));
+        balanceColumn.setCellValueFactory(new PropertyValueFactory<>("remainingBalance"));
     }
 
     @FXML
@@ -30,7 +43,7 @@ public class MainViewController {
         }
         try {
             int amount = Integer.parseInt(this.loanAmount.getText());
-            if (amount <= 0 || amount >= 1000000) {
+            if (amount < 0 || amount > 1000000) {
                 this.loanAmount.setText("1000000");
             }
         } 
@@ -68,7 +81,7 @@ public class MainViewController {
             if (months < 0) {
                 this.termMonths.setText("0");
             }
-            else if (months >= 12) {
+            else if (months > 11) {
                 this.termMonths.setText("11");
             }
         } 
@@ -84,11 +97,11 @@ public class MainViewController {
         }
         try {
             int rate = Integer.parseInt(this.annualRate.getText());
-            if (rate <= 0) {
-                this.annualRate.setText("0");
+            if (rate < 1) {
+                this.annualRate.setText("1");
             }
-            else if (rate > 100) {
-                this.annualRate.setText("100");
+            else if (rate > 200) {
+                this.annualRate.setText("200");
             }
         } 
         catch (NumberFormatException exception) {
@@ -115,28 +128,32 @@ public class MainViewController {
         }
     }
 
+    // !!!TODO: include delay in calculations
     @FXML
     public void calculate() {
-        double amount = Double.parseDouble(loanAmount.getText());
-        int years = Integer.parseInt(termYears.getText());
-        int months = Integer.parseInt(termMonths.getText());
-        double rate = Double.parseDouble(annualRate.getText());
-        String scheduleType = paymentSchedule.getValue();
+        try {
+            double amount = Double.parseDouble(loanAmount.getText());
+            int years = Integer.parseInt(termYears.getText());
+            int months = Integer.parseInt(termMonths.getText());
+            double rate = Double.parseDouble(annualRate.getText());
+            String scheduleType = paymentSchedule.getValue();
 
-        if ("Anuiteto".equals(scheduleType)) {
-            AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate);
-            PaymentSchedule[] schedule = loan.getPaymentSchedule();
+            ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
-            for (PaymentSchedule payment : schedule) {
-                System.out.println(payment.toString());
+            if ("Anuiteto".equals(scheduleType)) {
+                AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate);
+                PaymentSchedule[] schedule = loan.getPaymentSchedule();
+                data.addAll(schedule); // Add all schedule entries to the data list
+            } else if ("Linijinis".equals(scheduleType)) {
+                LinearLoan loan = new LinearLoan(amount, years, months, rate);
+                PaymentSchedule[] schedule = loan.getPaymentSchedule();
+                data.addAll(schedule);
             }
-        } else {
-            LinearLoan loan = new LinearLoan(amount, years, months, rate);
-            PaymentSchedule[] schedule = loan.getPaymentSchedule();
 
-            for (PaymentSchedule payment : schedule) {
-                System.out.println(payment.toString());
-            }
+            scheduleTable.getItems().clear();
+            scheduleTable.setItems(data);
+        } catch (NumberFormatException ex) {
+            System.out.println("Invalid input: " + ex.getMessage());
         }
     }
 }

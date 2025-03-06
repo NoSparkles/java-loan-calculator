@@ -19,10 +19,6 @@ public class PaymentSchedule {
         return month;
     }
 
-    public double getPrincipalPayment() {
-        return principalPayment;
-    }
-
     public double getInterestPayment() {
         return interestPayment;
     }
