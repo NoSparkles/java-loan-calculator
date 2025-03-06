@@ -132,20 +132,23 @@ public class MainViewController {
     @FXML
     public void calculate() {
         try {
-            double amount = Double.parseDouble(loanAmount.getText());
-            int years = Integer.parseInt(termYears.getText());
-            int months = Integer.parseInt(termMonths.getText());
-            double rate = Double.parseDouble(annualRate.getText());
-            String scheduleType = paymentSchedule.getValue();
+            double amount = Double.parseDouble(this.loanAmount.getText());
+            int years = Integer.parseInt(this.termYears.getText());
+            int months = Integer.parseInt(this.termMonths.getText());
+            double rate = Double.parseDouble(this.annualRate.getText());
+            String scheduleType = this.paymentSchedule.getValue();
+            int delay = Integer.parseInt(this.delay.getText());
+
+            System.out.println(delay);
 
             ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
             if ("Anuiteto".equals(scheduleType)) {
-                AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate);
+                AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate, delay);
                 PaymentSchedule[] schedule = loan.getPaymentSchedule();
                 data.addAll(schedule); // Add all schedule entries to the data list
             } else if ("Linijinis".equals(scheduleType)) {
-                LinearLoan loan = new LinearLoan(amount, years, months, rate);
+                LinearLoan loan = new LinearLoan(amount, years, months, rate, delay);
                 PaymentSchedule[] schedule = loan.getPaymentSchedule();
                 data.addAll(schedule);
             }

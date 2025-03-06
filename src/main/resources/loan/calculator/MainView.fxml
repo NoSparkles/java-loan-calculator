@@ -36,7 +36,7 @@
             </HBox>
             <ChoiceBox fx:id="paymentSchedule" prefWidth="150.0" />
             <Label text="Atidėjimas mėnesiais" />
-            <TextField />
+            <TextField fx:id="delay" />
             <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
          </children>
          <opaqueInsets>
