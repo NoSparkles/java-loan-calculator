@@ -1,13 +1,13 @@
 package loan.calculator;
 
 public class PaymentSchedule {
-    private int month;
+    private String month;
     private double principalPayment;
     private double interestPayment;
     private double totalPayment;
     private double remainingBalance;
 
-    public PaymentSchedule(int month, double principalPayment, double interestPayment, double totalPayment, double remainingBalance) {
+    public PaymentSchedule(String month, double principalPayment, double interestPayment, double totalPayment, double remainingBalance) {
         this.month = month;
         this.principalPayment = principalPayment;
         this.interestPayment = interestPayment;
@@ -15,7 +15,7 @@ public class PaymentSchedule {
         this.remainingBalance = remainingBalance;
     }
 
-    public int getMonth() {
+    public String getMonth() {
         return month;
     }
 

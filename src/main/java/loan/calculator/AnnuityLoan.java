@@ -8,17 +8,19 @@ public class AnnuityLoan extends Loan {
 
     @Override
     public PaymentSchedule[] getPaymentSchedule() {
-        double monthlyPayment = calculateMonthlyPayment();
+        double monthlyPayment = roundToTwoDecimals(calculateMonthlyPayment());
         int totalMonths = getTotalLoanTermMonths();
-        PaymentSchedule[] schedule = new PaymentSchedule[totalMonths];
+        PaymentSchedule[] schedule = new PaymentSchedule[totalMonths + 1]; // +1 for the summary row
 
         double remainingBalance = amount;
+        double totalInterestPayment = 0.0; // To accumulate the sum of interest payments
 
         // Interest-only payments during the delay period
         for (int i = 0; i < delay; i++) {
-            double interestPayment = (annualRate / 100 / 12) * remainingBalance;
+            double interestPayment = roundToTwoDecimals((annualRate / 100 / 12) * remainingBalance);
+            totalInterestPayment += interestPayment; // Accumulate interest payment
             schedule[i] = new PaymentSchedule(
-                i + 1, 
+                Integer.toString(i + 1), 
                 0.0, // No principal payment
                 interestPayment, // Interest payment
                 interestPayment, // Total payment equals interest
@@ -28,17 +30,27 @@ public class AnnuityLoan extends Loan {
 
         // Regular annuity payments after the delay period
         for (int i = delay; i < totalMonths; i++) {
-            double interestPayment = (annualRate / 100 / 12) * remainingBalance;
-            double principalPayment = monthlyPayment - interestPayment;
+            double interestPayment = roundToTwoDecimals((annualRate / 100 / 12) * remainingBalance);
+            double principalPayment = roundToTwoDecimals(monthlyPayment - interestPayment);
+            totalInterestPayment += interestPayment; // Accumulate interest payment
             schedule[i] = new PaymentSchedule(
-                i + 1, 
+                Integer.toString(i + 1), 
                 principalPayment, 
                 interestPayment, 
                 monthlyPayment, 
                 remainingBalance
             );
-            remainingBalance -= principalPayment;
+            remainingBalance = roundToTwoDecimals(remainingBalance - principalPayment);
         }
+
+        // Add the summary row
+        schedule[totalMonths] = new PaymentSchedule(
+            "Iš viso:", // Month label for the summary
+            roundToTwoDecimals(amount), // Total principal paid
+            roundToTwoDecimals(totalInterestPayment), // Total interest paid
+            roundToTwoDecimals(amount + totalInterestPayment), // Total payment (principal + interest)
+            0.00 // Final balance
+        );
 
         return schedule;
     }

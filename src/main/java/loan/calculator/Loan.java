@@ -20,4 +20,8 @@ public abstract class Loan {
     public int getTotalLoanTermMonths() {
         return this.termYears * 12 + this.termMonths;
     }
+
+    protected double roundToTwoDecimals(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
 }

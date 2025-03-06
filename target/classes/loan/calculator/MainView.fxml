@@ -43,12 +43,12 @@
             <Insets />
          </opaqueInsets>
       </VBox>
-      <TableView fx:id="scheduleTable" layoutX="342.0" layoutY="13.0" prefHeight="575.0" prefWidth="388.0">
+      <TableView fx:id="scheduleTable" layoutX="326.0" layoutY="13.0" prefHeight="575.0" prefWidth="404.0">
         <columns>
-          <TableColumn fx:id="monthColumn" prefWidth="66.0" text="Mėnesis" />
-          <TableColumn fx:id="interestColumn" prefWidth="70.0" text="Palūkanos" />
-            <TableColumn fx:id="paymentColumn" prefWidth="119.0" text="Mėnesinė įmoka" />
-            <TableColumn fx:id="balanceColumn" prefWidth="145.0" text="Paskolos likutis" />
+          <TableColumn fx:id="monthColumn" prefWidth="73.0" text="Mėnesis" />
+          <TableColumn fx:id="interestColumn" prefWidth="76.0" text="Palūkanos" />
+            <TableColumn fx:id="paymentColumn" prefWidth="121.0" text="Mėnesinė įmoka" />
+            <TableColumn fx:id="balanceColumn" prefWidth="127.0" text="Paskolos likutis" />
         </columns>
       </TableView>
    </children>
