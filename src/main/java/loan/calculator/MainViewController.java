@@ -13,10 +13,9 @@ public class MainViewController {
     @FXML private TextField termMonths;
     @FXML private TextField annualRate;
     @FXML private ChoiceBox<String> paymentSchedule;
+    @FXML private TextField delay;
     @FXML private Button calculateButton;
     @FXML private Label monthlyPayment;
-
-    private CalculatorController calculatorController;
 
     @FXML
     public void initialize() {
@@ -34,12 +33,9 @@ public class MainViewController {
             if (amount <= 0 || amount >= 1000000) {
                 this.loanAmount.setText("1000000");
             }
-            else if (this.loanAmount.getText().length() != 1){
-                this.loanAmount.setText(this.loanAmount.getText().replaceFirst("^0+", ""));
-            }
         } 
         catch (NumberFormatException exception) {
-            this.loanAmount.setText("0");
+            this.loanAmount.setText("");
         }
     }
 
@@ -56,12 +52,9 @@ public class MainViewController {
             else if (years > 30) {
                 this.termYears.setText("30");
             }
-            else if (this.termYears.getText().length() != 1) {
-                this.termYears.setText(this.termYears.getText().replaceFirst("^0+", ""));
-            }
         } 
         catch (NumberFormatException exception) {
-            this.termYears.setText("0");
+            this.termYears.setText("");
         }
     }
 
@@ -78,12 +71,9 @@ public class MainViewController {
             else if (months >= 12) {
                 this.termMonths.setText("11");
             }
-            else if (this.termMonths.getText().length() != 1) {
-                this.termMonths.setText(this.termMonths.getText().replaceFirst("^0+", ""));
-            }
         } 
         catch (NumberFormatException exception) {
-            this.termMonths.setText("0");
+            this.termMonths.setText("");
         }
     }
 
@@ -100,12 +90,28 @@ public class MainViewController {
             else if (rate > 100) {
                 this.annualRate.setText("100");
             }
-            else if (this.annualRate.getText().length() != 1) {
-                this.annualRate.setText(this.annualRate.getText().replaceFirst("^0+", ""));
+        } 
+        catch (NumberFormatException exception) {
+            this.annualRate.setText("");
+        }
+    }
+
+    @FXML
+    public void delayOnTyped() {
+        if (this.delay.getText().length() == 0) {
+            return;
+        }
+        try {
+            int delay = Integer.parseInt(this.delay.getText());
+            if (delay <= 0) {
+                this.annualRate.setText("0");
+            }
+            else if (delay > 1) {
+                this.delay.setText("96");
             }
         } 
         catch (NumberFormatException exception) {
-            this.annualRate.setText("0");
+            this.delay.setText("");
         }
     }
 
@@ -117,10 +123,20 @@ public class MainViewController {
         double rate = Double.parseDouble(annualRate.getText());
         String scheduleType = paymentSchedule.getValue();
 
-        Loan loan = new Loan(amount, years, months, rate);
-        this.calculatorController = new CalculatorController(loan);
-        calculatorController.calculate();
+        if ("Anuiteto".equals(scheduleType)) {
+            AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate);
+            PaymentSchedule[] schedule = loan.getPaymentSchedule();
 
-        monthlyPayment.setText(String.format("%.2f", loan.getMonthlyPayment()));
+            for (PaymentSchedule payment : schedule) {
+                System.out.println(payment.toString());
+            }
+        } else {
+            LinearLoan loan = new LinearLoan(amount, years, months, rate);
+            PaymentSchedule[] schedule = loan.getPaymentSchedule();
+
+            for (PaymentSchedule payment : schedule) {
+                System.out.println(payment.toString());
+            }
+        }
     }
 }

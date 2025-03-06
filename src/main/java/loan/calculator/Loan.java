@@ -1,36 +1,21 @@
 package loan.calculator;
 
-public class Loan {
-    private double amount;
-    private int termYears;
-    private int termMonths;
-    private double annualRate;
-    private double remainingAmount;
+public abstract class Loan {
+    protected double amount;
+    protected int termYears;
+    protected int termMonths;
+    protected double annualRate;
 
     public Loan(double amount, int termYears, int termMonths, double annualRate) {
         this.amount = amount;
         this.termYears = termYears;
         this.termMonths = termMonths;
         this.annualRate = annualRate;
-        this.remainingAmount = amount;
     }
 
-    // Getter and Setter methods
+    public abstract PaymentSchedule[] getPaymentSchedule();
 
-    public double getMonthlyPayment() {
-        // Implement monthly payment calculation
-        return 0;
-    }
-
-    public double getRemainingAmount() {
-        return remainingAmount;
-    }
-
-    // Override methods
-    @Override
-    public String toString() {
-        return "Loan [amount=" + amount + ", termYears=" + termYears + ", termMonths=" + termMonths + ", annualRate="
-                + annualRate + ", remainingAmount=" + remainingAmount + "]";
+    public int getTotalLoanTermMonths() {
+        return this.termYears * 12 + this.termMonths;
     }
 }
-
