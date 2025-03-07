@@ -38,6 +38,7 @@
             <Label text="Atidėjimas mėnesiais" />
             <TextField fx:id="delay" />
             <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
+            <Button mnemonicParsing="false" text="Rodyti grafiką" />
          </children>
          <opaqueInsets>
             <Insets />
