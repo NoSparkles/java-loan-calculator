@@ -1,14 +1,20 @@
 package loan.calculator;
 
+import java.io.IOException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class MainViewController {
     @FXML private TextField loanAmount;
@@ -26,12 +32,12 @@ public class MainViewController {
     @FXML private TableColumn<PaymentSchedule, Double> paymentColumn;
     @FXML private TableColumn<PaymentSchedule, Double> balanceColumn;
 
-    PaymentSchedule[] schedule;
+    PaymentSchedule[] schedule = null;
 
     @FXML
     public void initialize() {
-        paymentSchedule.setItems(FXCollections.observableArrayList("Anuiteto", "Linijinis"));
-        paymentSchedule.setValue("Anuiteto");
+        paymentSchedule.setItems(FXCollections.observableArrayList("Anuitetas", "Linijinis"));
+        paymentSchedule.setValue("Anuitetas");
 
         monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
         interestColumn.setCellValueFactory(new PropertyValueFactory<>("interestPayment"));
@@ -164,7 +170,7 @@ public class MainViewController {
             ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
             Loan loan;
-            if ("Anuiteto".equals(scheduleType)) {
+            if ("Anuitetas".equals(scheduleType)) {
                 loan = new AnnuityLoan(amount, years, months, rate, delay);
             }
             else {
@@ -178,5 +184,27 @@ public class MainViewController {
         } catch (NumberFormatException ex) {
             System.out.println("Invalid input: " + ex.getMessage());
         }
+    }
+
+    @FXML
+    public void showGraph() throws IOException {
+        if (this.schedule == null) {
+            return;
+        }
+
+        // Load the GraphView scene
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("GraphView.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller and pass the schedule
+        GraphViewController controller = loader.getController();
+        controller.setSchedule(this.schedule);
+        controller.initializeLineChart();
+
+        // Set the new scene
+        Stage stage = (Stage) showGraphButton.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }
