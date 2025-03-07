@@ -18,12 +18,15 @@ public class MainViewController {
     @FXML private ChoiceBox<String> paymentSchedule;
     @FXML private TextField delay;
     @FXML private Button calculateButton;
+    @FXML private Button showGraphButton;
 
     @FXML private TableView<PaymentSchedule> scheduleTable;
     @FXML private TableColumn<PaymentSchedule, Integer> monthColumn;
     @FXML private TableColumn<PaymentSchedule, Double> interestColumn;
     @FXML private TableColumn<PaymentSchedule, Double> paymentColumn;
     @FXML private TableColumn<PaymentSchedule, Double> balanceColumn;
+
+    PaymentSchedule[] schedule;
 
     @FXML
     public void initialize() {
@@ -160,15 +163,15 @@ public class MainViewController {
 
             ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
+            Loan loan;
             if ("Anuiteto".equals(scheduleType)) {
-                AnnuityLoan loan = new AnnuityLoan(amount, years, months, rate, delay);
-                PaymentSchedule[] schedule = loan.getPaymentSchedule();
-                data.addAll(schedule); // Add all schedule entries to the data list
-            } else if ("Linijinis".equals(scheduleType)) {
-                LinearLoan loan = new LinearLoan(amount, years, months, rate, delay);
-                PaymentSchedule[] schedule = loan.getPaymentSchedule();
-                data.addAll(schedule);
+                loan = new AnnuityLoan(amount, years, months, rate, delay);
             }
+            else {
+                loan = new LinearLoan(amount, years, months, rate, delay);
+            }
+            this.schedule = loan.getPaymentSchedule();
+            data.addAll(this.schedule);
 
             scheduleTable.getItems().clear();
             scheduleTable.setItems(data);
