@@ -133,15 +133,14 @@ public class MainViewController {
         if (this.loanAmount.getText().length() == 0) {
             this.loanAmount.setText("0");
         }
-        if (this.termYears.getText().length() == 0 && this.termMonths.getText().length() == 0) {
-            this.termYears.setText("0");
-            this.termMonths.setText("1");
-        }
         if (this.termYears.getText().length() == 0) {
             this.termYears.setText("0");
         }
         if (this.termMonths.getText().length() == 0) {
             this.termMonths.setText("0");
+        }
+        if (this.termYears.getText().equals("0") && this.termMonths.getText().equals("0")) {
+            this.termMonths.setText("1");
         }
         if (this.annualRate.getText().length() == 0) {
             this.annualRate.setText("0");
