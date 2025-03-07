@@ -97,8 +97,8 @@ public class MainViewController {
         }
         try {
             int rate = Integer.parseInt(this.annualRate.getText());
-            if (rate < 1) {
-                this.annualRate.setText("1");
+            if (rate < 0) {
+                this.annualRate.setText("0");
             }
             else if (rate > 200) {
                 this.annualRate.setText("200");
@@ -128,9 +128,27 @@ public class MainViewController {
         }
     }
 
-    // !!!TODO: include delay in calculations
     @FXML
     public void calculate() {
+        if (this.loanAmount.getText().length() == 0) {
+            this.loanAmount.setText("0");
+        }
+        if (this.termYears.getText().length() == 0 && this.termMonths.getText().length() == 0) {
+            this.termYears.setText("0");
+            this.termMonths.setText("1");
+        }
+        if (this.termYears.getText().length() == 0) {
+            this.termYears.setText("0");
+        }
+        if (this.termMonths.getText().length() == 0) {
+            this.termMonths.setText("0");
+        }
+        if (this.annualRate.getText().length() == 0) {
+            this.annualRate.setText("0");
+        }
+        if (this.delay.getText().length() == 0) {
+            this.delay.setText("0");
+        }
         try {
             double amount = Double.parseDouble(this.loanAmount.getText());
             int years = Integer.parseInt(this.termYears.getText());

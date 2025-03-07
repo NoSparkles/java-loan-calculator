@@ -58,6 +58,12 @@ public class AnnuityLoan extends Loan {
     public double calculateMonthlyPayment() {
         double monthlyRate = annualRate / 100 / 12;
         double totalMonths = getTotalLoanTermMonths() - delay; // Adjusted for the delay
+    
+        if (monthlyRate == 0) { // Handle zero-interest case
+            return amount / totalMonths;
+        }
+    
         return (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
     }
+    
 }
