@@ -12,46 +12,46 @@ public class LinearLoan extends Loan {
         PaymentSchedule[] schedule = new PaymentSchedule[totalMonths + 1]; // +1 for the summary row
 
         double remainingBalance = amount;
-        double principalPayment = roundToTwoDecimals(amount / (totalMonths - delay)); // Equal principal payments after delay
-        double totalInterestPayment = 0.0; // To calculate the sum of all interest payments
+        double principalPayment = amount / (totalMonths - delay); // Do not round here
+        double totalInterestPayment = 0.0;
 
         // Interest-only payments during the delay period
         for (int i = 0; i < delay; i++) {
-            double interestPayment = roundToTwoDecimals((annualRate / 100 / 12) * remainingBalance);
-            totalInterestPayment += interestPayment; // Accumulate interest payment
+            double interestPayment = (annualRate / 100 / 12) * remainingBalance;
+            totalInterestPayment += interestPayment;
             schedule[i] = new PaymentSchedule(
                 Integer.toString(i + 1),
-                0.0, // No principal payment
-                interestPayment, // Interest payment
-                interestPayment, // Total payment equals interest
-                remainingBalance // Balance remains unchanged
+                0.0,
+                roundToTwoDecimals(interestPayment), // Round only for display
+                roundToTwoDecimals(interestPayment),
+                roundToTwoDecimals(remainingBalance)
             );
         }
 
         // Linear payments after the delay period
         for (int i = delay; i < totalMonths; i++) {
-            double interestPayment = roundToTwoDecimals((annualRate / 100 / 12) * remainingBalance);
-            totalInterestPayment += interestPayment; // Accumulate interest payment
-            double totalPayment = roundToTwoDecimals(principalPayment + interestPayment);
+            double interestPayment = (annualRate / 100 / 12) * remainingBalance;
+            totalInterestPayment += interestPayment;
+            double totalPayment = principalPayment + interestPayment;
 
             schedule[i] = new PaymentSchedule(
                 Integer.toString(i + 1),
-                principalPayment, // Fixed principal payment
-                interestPayment, 
-                totalPayment, 
-                remainingBalance
+                roundToTwoDecimals(principalPayment), // Round only for display
+                roundToTwoDecimals(interestPayment),
+                roundToTwoDecimals(totalPayment),
+                roundToTwoDecimals(remainingBalance)
             );
 
-            remainingBalance = roundToTwoDecimals(remainingBalance - principalPayment); // Reduce balance by principal payment
+            remainingBalance -= principalPayment; // Use full precision here
         }
 
         // Add the summary row
         schedule[totalMonths] = new PaymentSchedule(
-            "Iš viso:", // Month label for the summary
-            roundToTwoDecimals(amount), // Total principal paid
-            roundToTwoDecimals(totalInterestPayment), // Total interest paid
-            roundToTwoDecimals(amount + totalInterestPayment), // Total paid (principal + interest)
-            0.00 // Final balance
+            "Iš viso:",
+            roundToTwoDecimals(amount),
+            roundToTwoDecimals(totalInterestPayment),
+            roundToTwoDecimals(amount + totalInterestPayment),
+            0.00
         );
 
         return schedule;
