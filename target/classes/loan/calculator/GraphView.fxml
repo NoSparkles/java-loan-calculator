@@ -14,5 +14,5 @@
       <NumberAxis fx:id="yAxis" label="Monthly Payment" />
     </yAxis>
   </LineChart>
-   <Button fx:id="showGraphButton" layoutX="63.0" layoutY="51.0" mnemonicParsing="false" onAction="#goBack" text="Atgal" />
+   <Button fx:id="goBackButton" layoutX="63.0" layoutY="51.0" mnemonicParsing="false" onAction="#goBack" text="Atgal" />
 </AnchorPane>

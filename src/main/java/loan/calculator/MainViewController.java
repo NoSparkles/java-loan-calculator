@@ -45,6 +45,21 @@ public class MainViewController {
         balanceColumn.setCellValueFactory(new PropertyValueFactory<>("remainingBalance"));
     }
 
+    public void restoreState(LoanState state) {
+        this.loanAmount.setText(state.getLoanAmount());
+        this.termYears.setText(state.getTermYears());
+        this.termMonths.setText(state.getTermMonths());
+        this.annualRate.setText(state.getAnnualRate());
+        this.delay.setText(state.getDelay());
+        this.paymentSchedule.setValue(state.getScheduleType());
+        this.schedule = state.getPaymentSchedule();
+    }
+
+    @FXML
+    public void setSchedule(PaymentSchedule[] schedule) {
+        this.schedule = schedule;
+    }
+
     @FXML
     public void loanAmountOnTyped() {
         if (this.loanAmount.getText().length() == 0) {
@@ -192,14 +207,18 @@ public class MainViewController {
             return;
         }
 
+        LoanState state = LoanState.getInstance();
+        state.setLoanAmount(loanAmount.getText());
+        state.setTermYears(termYears.getText());
+        state.setTermMonths(termMonths.getText());
+        state.setAnnualRate(annualRate.getText());
+        state.setDelay(delay.getText());
+        state.setScheduleType(paymentSchedule.getValue());
+        state.setPaymentSchedule(this.schedule);
+
         // Load the GraphView scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GraphView.fxml"));
         Parent root = loader.load();
-
-        // Get the controller and pass the schedule
-        GraphViewController controller = loader.getController();
-        controller.setSchedule(this.schedule);
-        controller.initializeLineChart();
 
         // Set the new scene
         Stage stage = (Stage) showGraphButton.getScene().getWindow();
