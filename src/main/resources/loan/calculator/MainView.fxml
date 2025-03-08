@@ -10,15 +10,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loan.calculator.MainViewController">
    <children>
-      <VBox layoutX="77.0" layoutY="135.0" prefHeight="331.0" prefWidth="202.0" spacing="10.0">
+      <VBox layoutX="69.0" layoutY="53.0" prefHeight="331.0" prefWidth="202.0" spacing="10.0">
          <children>
             <Label prefHeight="17.0" prefWidth="165.0" text="Pageidaujamos paskolos suma" />
             <HBox prefHeight="18.0" prefWidth="571.0">
                <children>
-                  <TextField fx:id="loanAmount" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#loanAmountOnTyped" prefHeight="25.0" prefWidth="200.0" />
+                  <TextField fx:id="loanAmount" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#loanAmountOnTyped" prefHeight="25.0" prefWidth="200.0" promptText="Pvz. 20000" />
                </children>
             </HBox>
             <Label prefHeight="17.0" prefWidth="98.0" text="Paskolos terminas" />
@@ -34,9 +35,18 @@
                   <TextField fx:id="annualRate" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#annualRateOnTyped" prefHeight="25.0" prefWidth="200.0" promptText="\%" />
                </children>
             </HBox>
-            <ChoiceBox fx:id="paymentSchedule" prefWidth="150.0" />
-            <Label text="Atidėjimas mėnesiais" />
-            <TextField fx:id="delay" />
+            <ChoiceBox fx:id="scheduleType" prefWidth="150.0" />
+            <Label text="Atidėjimas" />
+            <TextField fx:id="delay" promptText="Mėnesiai" />
+            <Label text="Rodyti mokėjimus">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label text="Nuo" />
+            <TextField fx:id="fromMonth" promptText="Mėnesis" />
+            <Label text="Iki" />
+            <TextField fx:id="toMonth" promptText="Mėnesis" />
             <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
             <Button fx:id="showGraphButton" mnemonicParsing="false" onAction="#showGraph" text="Rodyti grafiką" />
          </children>

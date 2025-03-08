@@ -21,9 +21,10 @@ public class MainViewController {
     @FXML private TextField termYears;
     @FXML private TextField termMonths;
     @FXML private TextField annualRate;
-    @FXML private ChoiceBox<String> paymentSchedule;
+    @FXML private ChoiceBox<String> scheduleType;
     @FXML private TextField delay;
-    @FXML private Button calculateButton;
+    @FXML private TextField fromMonth;
+    @FXML private TextField toMonth;
     @FXML private Button showGraphButton;
 
     @FXML private TableView<PaymentSchedule> scheduleTable;
@@ -36,8 +37,8 @@ public class MainViewController {
 
     @FXML
     public void initialize() {
-        paymentSchedule.setItems(FXCollections.observableArrayList("Anuitetas", "Linijinis"));
-        paymentSchedule.setValue("Anuitetas");
+        scheduleType.setItems(FXCollections.observableArrayList("Anuitetas", "Linijinis"));
+        scheduleType.setValue("Anuitetas");
 
         monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
         interestColumn.setCellValueFactory(new PropertyValueFactory<>("interestPayment"));
@@ -51,7 +52,9 @@ public class MainViewController {
         this.termMonths.setText(state.getTermMonths());
         this.annualRate.setText(state.getAnnualRate());
         this.delay.setText(state.getDelay());
-        this.paymentSchedule.setValue(state.getScheduleType());
+        this.fromMonth.setText(state.getFromMonth());
+        this.toMonth.setText(state.getToMonth());
+        this.scheduleType.setValue(state.getScheduleType());
         this.schedule = state.getPaymentSchedule();
     }
 
@@ -139,16 +142,48 @@ public class MainViewController {
             return;
         }
         try {
-            int delay = Integer.parseInt(this.delay.getText());
-            if (delay <= 0) {
-                this.annualRate.setText("0");
+            int months = Integer.parseInt(this.delay.getText());
+            if (months < 0) {
+                this.delay.setText("0");
             }
-            else if (delay > 1) {
+            else if (months > 96) {
                 this.delay.setText("96");
             }
         } 
         catch (NumberFormatException exception) {
             this.delay.setText("");
+        }
+    }
+
+    @FXML
+    public void fromMonthOnTyped() {
+        if (this.fromMonth.getText().length() == 0) {
+            return;
+        }
+        try {
+            int months = Integer.parseInt(this.fromMonth.getText());
+            if (months <= 0) {
+                this.fromMonth.setText("0");
+            }
+        } 
+        catch (NumberFormatException exception) {
+            this.fromMonth.setText("");
+        }
+    }
+
+    @FXML
+    public void toMonthOnTyped() {
+        if (this.toMonth.getText().length() == 0) {
+            return;
+        }
+        try {
+            int months = Integer.parseInt(this.toMonth.getText());
+            if (months <= 0) {
+                this.toMonth.setText("0");
+            }
+        } 
+        catch (NumberFormatException exception) {
+            this.fromMonth.setText("");
         }
     }
 
@@ -172,15 +207,31 @@ public class MainViewController {
         if (this.delay.getText().length() == 0) {
             this.delay.setText("0");
         }
+        if (this.fromMonth.getText().length() == 0) {
+            this.fromMonth.setText("0");
+        }
+        if (Integer.parseInt(this.fromMonth.getText()) > Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())) {
+            this.fromMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())));
+        }
+        if (this.toMonth.getText().length() == 0) {
+            this.toMonth.setText("0");
+        }
+        if (Integer.parseInt(this.toMonth.getText()) < Integer.parseInt(this.fromMonth.getText())) {
+            this.toMonth.setText(String.valueOf(Integer.parseInt(this.fromMonth.getText())));
+        }
+        if (Integer.parseInt(this.toMonth.getText()) > Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())) {
+            this.toMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())));
+        }
+
         try {
             double amount = Double.parseDouble(this.loanAmount.getText());
             int years = Integer.parseInt(this.termYears.getText());
             int months = Integer.parseInt(this.termMonths.getText());
             double rate = Double.parseDouble(this.annualRate.getText());
-            String scheduleType = this.paymentSchedule.getValue();
+            String scheduleType = this.scheduleType.getValue();
             int delay = Integer.parseInt(this.delay.getText());
-
-            System.out.println(delay);
+            int fromMonth = Integer.parseInt(this.fromMonth.getText());
+            int toMonth = Integer.parseInt(this.fromMonth.getText());
 
             ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
@@ -213,7 +264,7 @@ public class MainViewController {
         state.setTermMonths(termMonths.getText());
         state.setAnnualRate(annualRate.getText());
         state.setDelay(delay.getText());
-        state.setScheduleType(paymentSchedule.getValue());
+        state.setScheduleType(scheduleType.getValue());
         state.setPaymentSchedule(this.schedule);
 
         // Load the GraphView scene

@@ -8,6 +8,8 @@ public class LoanState {
     private String termMonths;
     private String annualRate;
     private String delay;
+    private String fromMonth;
+    private String toMonth;
     private String scheduleType;
     private PaymentSchedule[] schedule;
 
@@ -28,6 +30,10 @@ public class LoanState {
     public void setAnnualRate(String annualRate) { this.annualRate = annualRate; }
     public String getDelay() { return this.delay; }
     public void setDelay(String delay) { this.delay = delay; }
+    public String getFromMonth() { return this.fromMonth; }
+    public void setFromMonth(String month) { this.fromMonth = month; }
+    public String getToMonth() { return this.toMonth; }
+    public void setToMonth(String month) { this.toMonth = month; }
     public String getScheduleType() { return this.scheduleType; }
     public void setScheduleType(String scheduleType) { this.scheduleType = scheduleType; }
     public PaymentSchedule[] getPaymentSchedule() { return this.schedule; }
