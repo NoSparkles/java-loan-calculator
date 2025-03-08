@@ -1,6 +1,12 @@
 package loan.calculator;
 
+import java.io.File;
 import java.io.IOException;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainViewController {
@@ -261,8 +268,6 @@ public class MainViewController {
             int fromMonth = Integer.parseInt(this.fromMonth.getText()) - 1;
             int toMonth = Integer.parseInt(this.toMonth.getText()) - 1;
 
-            ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
-
             Loan loan;
             if ("Anuitetas".equals(scheduleType)) {
                 loan = new AnnuityLoan(amount, years, months, rate, fromDelay, delay);
@@ -272,8 +277,7 @@ public class MainViewController {
             }
             this.schedule = loan.getPaymentSchedule(fromMonth, toMonth);
             
-            data.addAll(this.schedule);
-
+            ObservableList<PaymentSchedule> data = FXCollections.observableArrayList(this.schedule);
             scheduleTable.getItems().clear();
             scheduleTable.setItems(data);
         } catch (NumberFormatException ex) {
@@ -292,6 +296,7 @@ public class MainViewController {
         state.setTermYears(this.termYears.getText());
         state.setTermMonths(this.termMonths.getText());
         state.setAnnualRate(this.annualRate.getText());
+        state.setFromDelay(this.fromDelay.getText());
         state.setDelay(this.delay.getText());
         state.setFromMonth(this.fromMonth.getText());
         state.setToMonth(this.toMonth.getText());
@@ -310,5 +315,64 @@ public class MainViewController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void saveToFile() {
+        if (this.schedule == null || this.schedule.length == 0) {
+            System.out.println("No data to save!");
+            return;
+        }
+
+        // Open file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save as PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(scheduleTable.getScene().getWindow());
+
+        if (file != null) {
+            try (PDDocument document = new PDDocument()) {
+                // Create a new page
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                // Initialize content stream
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 750);
+                    contentStream.showText("Loan Payment Schedule");
+                    contentStream.endText();
+
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(50, 730);
+
+                    // Table headers
+                    String header = String.format("%-10s %-15s %-15s %-15s",
+                        "Month", "Interest", "Total Payment", "Remaining Balance");
+                    contentStream.showText(header);
+                    contentStream.newLineAtOffset(0, -20);
+
+                    // Table content
+                    for (PaymentSchedule ps : this.schedule) {
+                        String row = String.format("%-10s %-15.2f %-15.2f %-15.2f",
+                                ps.getMonth(),
+                                ps.getInterestPayment(),
+                                ps.getTotalPayment(),
+                                ps.getRemainingBalance());
+                        contentStream.showText(row);
+                        contentStream.newLineAtOffset(0, -15);
+                    }
+                    contentStream.endText();
+                }
+
+                // Save the document
+                document.save(file);
+                System.out.println("PDF saved: " + file.getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println("Error saving PDF: " + ex.getMessage());
+            }
+        }
     }
 }

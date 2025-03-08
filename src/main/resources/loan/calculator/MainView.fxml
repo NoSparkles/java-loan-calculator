@@ -56,7 +56,7 @@
             <TextField fx:id="toMonth" onKeyTyped="#toMonthOnTyped" promptText="Mėnesis" />
             <Button mnemonicParsing="false" onAction="#calculate" prefHeight="25.0" prefWidth="90.0" text="Apskaičiuoti" />
             <Button fx:id="showGraphButton" mnemonicParsing="false" onAction="#showGraph" text="Rodyti grafiką" />
-            <Button mnemonicParsing="false" text="Išsaugoti lentelę" />
+            <Button mnemonicParsing="false" onAction="#saveToFile" text="Išsaugoti lentelę" />
          </children>
          <opaqueInsets>
             <Insets />
