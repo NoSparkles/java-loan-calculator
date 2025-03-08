@@ -146,8 +146,8 @@ public class MainViewController {
             if (months < 0) {
                 this.delay.setText("0");
             }
-            else if (months > 96) {
-                this.delay.setText("96");
+            else if (months > Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())) {
+                this.delay.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText()) - 1));
             }
         } 
         catch (NumberFormatException exception) {
@@ -237,12 +237,12 @@ public class MainViewController {
 
             Loan loan;
             if ("Anuitetas".equals(scheduleType)) {
-                loan = new AnnuityLoan(amount, years, months, rate, delay, fromMonth, toMonth);
+                loan = new AnnuityLoan(amount, years, months, rate, delay);
             }
             else {
-                loan = new LinearLoan(amount, years, months, rate, delay, fromMonth, toMonth);
+                loan = new LinearLoan(amount, years, months, rate, delay);
             }
-            this.schedule = loan.getPaymentSchedule();
+            this.schedule = loan.getPaymentSchedule(fromMonth, toMonth);
             
             data.addAll(this.schedule);
 
@@ -260,12 +260,14 @@ public class MainViewController {
         }
 
         LoanState state = LoanState.getInstance();
-        state.setLoanAmount(loanAmount.getText());
-        state.setTermYears(termYears.getText());
-        state.setTermMonths(termMonths.getText());
-        state.setAnnualRate(annualRate.getText());
-        state.setDelay(delay.getText());
-        state.setScheduleType(scheduleType.getValue());
+        state.setLoanAmount(this.loanAmount.getText());
+        state.setTermYears(this.termYears.getText());
+        state.setTermMonths(this.termMonths.getText());
+        state.setAnnualRate(this.annualRate.getText());
+        state.setDelay(this.delay.getText());
+        state.setFromMonth(this.fromMonth.getText());
+        state.setToMonth(this.toMonth.getText());
+        state.setScheduleType(this.scheduleType.getValue());
         state.setPaymentSchedule(this.schedule);
 
         // Load the GraphView scene

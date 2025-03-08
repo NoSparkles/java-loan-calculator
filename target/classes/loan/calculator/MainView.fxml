@@ -37,16 +37,16 @@
             </HBox>
             <ChoiceBox fx:id="scheduleType" prefWidth="150.0" />
             <Label text="Atidėjimas" />
-            <TextField fx:id="delay" promptText="Mėnesiai" />
+            <TextField fx:id="delay" onKeyTyped="#delayOnTyped" promptText="Mėnesiai" />
             <Label text="Rodyti mokėjimus">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
             <Label text="Nuo" />
-            <TextField fx:id="fromMonth" promptText="Mėnesis" />
+            <TextField fx:id="fromMonth" onKeyTyped="#fromMonthOnTyped" promptText="Mėnesis" />
             <Label text="Iki" />
-            <TextField fx:id="toMonth" promptText="Mėnesis" />
+            <TextField fx:id="toMonth" onKeyTyped="#toMonthOnTyped" promptText="Mėnesis" />
             <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
             <Button fx:id="showGraphButton" mnemonicParsing="false" onAction="#showGraph" text="Rodyti grafiką" />
          </children>

@@ -7,7 +7,7 @@ public class AnnuityLoan extends Loan {
     }
 
     @Override
-    public PaymentSchedule[] getPaymentSchedule() {
+    public PaymentSchedule[] getPaymentSchedule(int fromMonth, int toMonth) {
         double monthlyPayment = calculateMonthlyPayment(); // No rounding here
         int totalMonths = getTotalLoanTermMonths();
         PaymentSchedule[] schedule = new PaymentSchedule[totalMonths + 1]; // +1 for the summary row
@@ -54,7 +54,7 @@ public class AnnuityLoan extends Loan {
             0.00
         );
 
-        return schedule;
+        return this.getFilteredPaymentSchedule(schedule, fromMonth, toMonth);
     }
 
     public double calculateMonthlyPayment() {

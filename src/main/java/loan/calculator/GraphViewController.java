@@ -16,28 +16,37 @@ public class GraphViewController {
     @FXML private Button goBackButton;
     @FXML private LineChart<Number, Number> lineChart;
 
-    PaymentSchedule[] schedule = LoanState.getInstance().getPaymentSchedule();
-
     public void initializeLineChart() {
         // Clear existing data in the chart (if any)
         lineChart.getData().clear();
-        
-        // // Create a data series for monthly payments
+                
+        // Create a data series for monthly payments
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         series.setName("Mėnesinės įmokos");
-
+        LoanState state = LoanState.getInstance();
+        PaymentSchedule[] schedule = state.getPaymentSchedule();
+    
+        int fromMonth = Integer.parseInt(state.getFromMonth());
+        
         // Populate the series with data from the PaymentSchedule
         for (int i = 0; i < schedule.length - 1; i++) {
-            series.getData().add(new XYChart.Data<>(i + 1, schedule[i].getTotalPayment()));
+            // Start numbering the months from `fromMonth`
+            series.getData().add(new XYChart.Data<>(fromMonth + i, schedule[i].getTotalPayment()));
         }
-
+        
         // Add the series to the chart
         lineChart.getData().add(series);
-
-        // Customize the chart axes labels
+        
+        // Customize the x-axis to reflect the correct month numbering
         NumberAxis xAxis = (NumberAxis) lineChart.getXAxis();
-
-        NumberAxis yAxis = (NumberAxis) lineChart.getYAxis();
+        xAxis.setTickUnit(1);
+        xAxis.setForceZeroInRange(false);
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(fromMonth);
+        xAxis.setUpperBound(fromMonth + schedule.length - 2);
+    
+        // Customize the y-axis if needed
+        //NumberAxis yAxis = (NumberAxis) lineChart.getYAxis();
     }
 
     @FXML
