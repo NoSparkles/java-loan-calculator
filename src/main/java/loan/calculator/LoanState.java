@@ -7,6 +7,7 @@ public class LoanState {
     private String termYears;
     private String termMonths;
     private String annualRate;
+    private String fromDelay;
     private String delay;
     private String fromMonth;
     private String toMonth;
@@ -28,6 +29,8 @@ public class LoanState {
     public void setTermMonths(String termMonths) { this.termMonths = termMonths; }
     public String getAnnualRate() { return this.annualRate; }
     public void setAnnualRate(String annualRate) { this.annualRate = annualRate; }
+    public String getFromDelay() { return this.fromDelay; }
+    public void setFromDelay(String fromDelay) { this.fromDelay = fromDelay; }
     public String getDelay() { return this.delay; }
     public void setDelay(String delay) { this.delay = delay; }
     public String getFromMonth() { return this.fromMonth; }

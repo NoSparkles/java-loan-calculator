@@ -22,6 +22,7 @@ public class MainViewController {
     @FXML private TextField termMonths;
     @FXML private TextField annualRate;
     @FXML private ChoiceBox<String> scheduleType;
+    @FXML private TextField fromDelay;
     @FXML private TextField delay;
     @FXML private TextField fromMonth;
     @FXML private TextField toMonth;
@@ -51,6 +52,7 @@ public class MainViewController {
         this.termYears.setText(state.getTermYears());
         this.termMonths.setText(state.getTermMonths());
         this.annualRate.setText(state.getAnnualRate());
+        this.fromDelay.setText(state.getFromDelay());
         this.delay.setText(state.getDelay());
         this.fromMonth.setText(state.getFromMonth());
         this.toMonth.setText(state.getToMonth());
@@ -137,6 +139,22 @@ public class MainViewController {
     }
 
     @FXML
+    public void fromDelayOnTyped() {
+        if (this.fromDelay.getText().length() == 0) {
+            return;
+        }
+        try {
+            int months = Integer.parseInt(this.fromDelay.getText());
+            if (months < 1) {
+                this.fromDelay.setText("1");
+            }
+        } 
+        catch (NumberFormatException exception) {
+            this.fromDelay.setText("");
+        }
+    }
+
+    @FXML
     public void delayOnTyped() {
         if (this.delay.getText().length() == 0) {
             return;
@@ -204,8 +222,17 @@ public class MainViewController {
         if (this.annualRate.getText().length() == 0) {
             this.annualRate.setText("0");
         }
+        if (this.fromDelay.getText().length() == 0) {
+            this.fromDelay.setText("1");
+        }
+        if (Integer.parseInt(this.fromDelay.getText()) > Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())) {
+            this.fromDelay.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())));
+        }
         if (this.delay.getText().length() == 0) {
             this.delay.setText("0");
+        }
+        if (Integer.parseInt(this.delay.getText()) + Integer.parseInt(this.fromDelay.getText()) > Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())) {
+            this.delay.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText()) - Integer.parseInt(this.fromDelay.getText())));
         }
         if (this.fromMonth.getText().length() == 0) {
             this.fromMonth.setText("1");
@@ -229,6 +256,7 @@ public class MainViewController {
             int months = Integer.parseInt(this.termMonths.getText());
             double rate = Double.parseDouble(this.annualRate.getText());
             String scheduleType = this.scheduleType.getValue();
+            int fromDelay = Integer.parseInt(this.fromDelay.getText()) - 1;
             int delay = Integer.parseInt(this.delay.getText());
             int fromMonth = Integer.parseInt(this.fromMonth.getText()) - 1;
             int toMonth = Integer.parseInt(this.toMonth.getText()) - 1;
@@ -237,10 +265,10 @@ public class MainViewController {
 
             Loan loan;
             if ("Anuitetas".equals(scheduleType)) {
-                loan = new AnnuityLoan(amount, years, months, rate, delay);
+                loan = new AnnuityLoan(amount, years, months, rate, fromDelay, delay);
             }
             else {
-                loan = new LinearLoan(amount, years, months, rate, delay);
+                loan = new LinearLoan(amount, years, months, rate, fromDelay, delay);
             }
             this.schedule = loan.getPaymentSchedule(fromMonth, toMonth);
             

@@ -14,30 +14,37 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loan.calculator.MainViewController">
    <children>
-      <VBox layoutX="69.0" layoutY="53.0" prefHeight="331.0" prefWidth="202.0" spacing="10.0">
+      <VBox layoutX="69.0" layoutY="42.0" prefHeight="331.0" prefWidth="202.0" spacing="10.0">
          <children>
             <Label prefHeight="17.0" prefWidth="165.0" text="Pageidaujamos paskolos suma" />
-            <HBox prefHeight="18.0" prefWidth="571.0">
-               <children>
-                  <TextField fx:id="loanAmount" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#loanAmountOnTyped" prefHeight="25.0" prefWidth="200.0" promptText="Pvz. 20000" />
-               </children>
-            </HBox>
+            <TextField fx:id="loanAmount" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#loanAmountOnTyped" prefHeight="25.0" prefWidth="200.0" promptText="Pvz. 20000" />
             <Label prefHeight="17.0" prefWidth="98.0" text="Paskolos terminas" />
             <HBox prefHeight="26.0" prefWidth="571.0" spacing="20.0">
                <children>
                   <TextField fx:id="termYears" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#termYearsOnTyped" prefHeight="25.0" prefWidth="90.0" promptText="Metai" />
-                  <TextField fx:id="termMonths" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#termMonthsOnTyped" prefHeight="25.0" prefWidth="90.0" promptText="Mėnesiai" />
+                  <TextField fx:id="termMonths" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#termMonthsOnTyped" prefHeight="25.0" prefWidth="92.0" promptText="Mėnesiai" />
                </children>
             </HBox>
-            <Label prefHeight="17.0" prefWidth="129.0" text="Metinė palūkanų norma" />
+            <Label prefHeight="17.0" prefWidth="129.0" text="Metinė palūkanų norma">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
             <HBox prefHeight="25.0" prefWidth="571.0">
                <children>
-                  <TextField fx:id="annualRate" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#annualRateOnTyped" prefHeight="25.0" prefWidth="200.0" promptText="\%" />
+                  <TextField fx:id="annualRate" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#annualRateOnTyped" prefHeight="25.0" prefWidth="202.0" promptText="\%" />
                </children>
             </HBox>
-            <ChoiceBox fx:id="scheduleType" prefWidth="150.0" />
-            <Label text="Atidėjimas" />
-            <TextField fx:id="delay" onKeyTyped="#delayOnTyped" promptText="Mėnesiai" />
+            <ChoiceBox fx:id="scheduleType" prefHeight="25.0" prefWidth="204.0" />
+            <Label text="Atidėjimas">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <TextField fx:id="fromDelay" onKeyTyped="#fromDelayOnTyped" promptText="Nuo" />
+                  <TextField fx:id="delay" onKeyTyped="#delayOnTyped" promptText="Mėnesiai" />
+               </children>
+            </HBox>
             <Label text="Rodyti mokėjimus">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -47,14 +54,15 @@
             <TextField fx:id="fromMonth" onKeyTyped="#fromMonthOnTyped" promptText="Mėnesis" />
             <Label text="Iki" />
             <TextField fx:id="toMonth" onKeyTyped="#toMonthOnTyped" promptText="Mėnesis" />
-            <Button mnemonicParsing="false" onAction="#calculate" text="Apskaičiuoti" />
+            <Button mnemonicParsing="false" onAction="#calculate" prefHeight="25.0" prefWidth="90.0" text="Apskaičiuoti" />
             <Button fx:id="showGraphButton" mnemonicParsing="false" onAction="#showGraph" text="Rodyti grafiką" />
+            <Button mnemonicParsing="false" text="Išsaugoti lentelę" />
          </children>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </VBox>
-      <TableView fx:id="scheduleTable" layoutX="326.0" layoutY="13.0" prefHeight="575.0" prefWidth="404.0">
+      <TableView fx:id="scheduleTable" layoutX="332.0" layoutY="13.0" prefHeight="575.0" prefWidth="404.0">
         <columns>
           <TableColumn fx:id="monthColumn" prefWidth="73.0" text="Mėnesis" />
           <TableColumn fx:id="interestColumn" prefWidth="76.0" text="Palūkanos" />

@@ -5,13 +5,15 @@ public abstract class Loan {
     protected int termYears;
     protected int termMonths;
     protected double annualRate;
+    protected int fromDelay;
     protected int delay;
 
-    public Loan(double amount, int termYears, int termMonths, double annualRate, int delay) {
+    public Loan(double amount, int termYears, int termMonths, double annualRate, int fromDelay, int delay) {
         this.amount = amount;
         this.termYears = termYears;
         this.termMonths = termMonths;
         this.annualRate = annualRate;
+        this.fromDelay = fromDelay;
         this.delay = delay;
     }
 

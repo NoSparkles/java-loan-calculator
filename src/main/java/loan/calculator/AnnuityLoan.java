@@ -2,47 +2,66 @@ package loan.calculator;
 
 public class AnnuityLoan extends Loan {
 
-    public AnnuityLoan(double amount, int termYears, int termMonths, double annualRate, int delay) {
-        super(amount, termYears, termMonths, annualRate, delay);
+    public AnnuityLoan(double amount, int termYears, int termMonths, double annualRate, int fromDelay, int delay) {
+        super(amount, termYears, termMonths, annualRate, fromDelay, delay);
     }
 
+    
     @Override
     public PaymentSchedule[] getPaymentSchedule(int fromMonth, int toMonth) {
-        double monthlyPayment = calculateMonthlyPayment(); // No rounding here
+        double monthlyPayment = calculateMonthlyPayment(); // Standard annuity payment calculation
         int totalMonths = getTotalLoanTermMonths();
         PaymentSchedule[] schedule = new PaymentSchedule[totalMonths + 1]; // +1 for the summary row
 
         double remainingBalance = this.amount;
         double totalInterestPayment = 0.0;
 
-        // Interest-only payments during the delay period
-        for (int i = 0; i < this.delay; i++) {
+        // Regular payments before the deferment period
+        for (int i = 0; i < fromDelay; i++) {
             double interestPayment = (this.annualRate / 100 / 12) * remainingBalance;
+            double principalPayment = monthlyPayment - interestPayment; // Deduct interest from monthly payment
             totalInterestPayment += interestPayment;
+
             schedule[i] = new PaymentSchedule(
                 Integer.toString(i + 1),
-                0.0,
-                roundToTwoDecimals(interestPayment), // Round only at this step
+                roundToTwoDecimals(principalPayment), // Regular principal payment
                 roundToTwoDecimals(interestPayment),
+                roundToTwoDecimals(monthlyPayment),
+                roundToTwoDecimals(remainingBalance)
+            );
+
+            remainingBalance -= principalPayment; // Reduce balance by principal payment
+        }
+
+        // Interest-only payments during the deferment period
+        for (int i = fromDelay; i < fromDelay + delay; i++) {
+            double interestPayment = (this.annualRate / 100 / 12) * remainingBalance;
+            totalInterestPayment += interestPayment;
+
+            schedule[i] = new PaymentSchedule(
+                Integer.toString(i + 1),
+                0.0, // No principal payment during deferment
+                roundToTwoDecimals(interestPayment),
+                roundToTwoDecimals(interestPayment), // Monthly payment is interest-only
                 roundToTwoDecimals(remainingBalance)
             );
         }
 
-        // Regular annuity payments after the delay period
-        for (int i = this.delay; i < totalMonths; i++) {
+        // Regular annuity payments after the deferment period
+        for (int i = fromDelay + delay; i < totalMonths; i++) {
             double interestPayment = (this.annualRate / 100 / 12) * remainingBalance;
             double principalPayment = monthlyPayment - interestPayment;
             totalInterestPayment += interestPayment;
 
             schedule[i] = new PaymentSchedule(
                 Integer.toString(i + 1),
-                roundToTwoDecimals(principalPayment), // Round only at this step
+                roundToTwoDecimals(principalPayment),
                 roundToTwoDecimals(interestPayment),
                 roundToTwoDecimals(monthlyPayment),
                 roundToTwoDecimals(remainingBalance)
             );
 
-            remainingBalance -= principalPayment; // Use full precision here
+            remainingBalance -= principalPayment; // Reduce balance by principal payment
         }
 
         // Add the summary row
