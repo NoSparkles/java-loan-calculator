@@ -3,9 +3,13 @@ package loan.calculator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javafx.collections.FXCollections;
@@ -22,6 +26,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import loan.calculator.loans.AnnuityLoan;
+import loan.calculator.loans.LinearLoan;
+import loan.calculator.loans.Loan;
+import loan.calculator.loans.LoanState;
+import loan.calculator.loans.PaymentSchedule;
 
 public class MainViewController {
     @FXML private TextField loanAmount;

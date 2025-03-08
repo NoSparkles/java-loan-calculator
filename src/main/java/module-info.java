@@ -5,4 +5,5 @@ module loan.calculator {
 
     opens loan.calculator to javafx.fxml;
     exports loan.calculator;
+    exports loan.calculator.loans;
 }

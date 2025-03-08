@@ -11,6 +11,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import loan.calculator.loans.LoanState;
+import loan.calculator.loans.PaymentSchedule;
 
 public class GraphViewController {
     @FXML private Button goBackButton;

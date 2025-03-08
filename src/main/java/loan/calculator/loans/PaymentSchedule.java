@@ -1,4 +1,4 @@
-package loan.calculator;
+package loan.calculator.loans;
 
 public class PaymentSchedule {
     private String month;

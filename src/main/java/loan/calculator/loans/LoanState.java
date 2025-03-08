@@ -1,4 +1,4 @@
-package loan.calculator;
+package loan.calculator.loans;
 
 public class LoanState {
     private final static LoanState instance = new LoanState();
