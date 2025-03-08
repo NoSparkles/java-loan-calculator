@@ -1,12 +1,12 @@
 package loan.calculator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -318,60 +318,52 @@ public class MainViewController {
     }
 
     @FXML
-    public void saveToFile() {
-        if (this.schedule == null || this.schedule.length == 0) {
-            System.out.println("No data to save!");
-            return;
-        }
-
-        // Open file chooser
+    public void saveToExcel() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save as PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        File file = fileChooser.showSaveDialog(scheduleTable.getScene().getWindow());
+        fileChooser.setTitle("Save Loan Schedule");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
 
+        File file = fileChooser.showSaveDialog(new Stage());
         if (file != null) {
-            try (PDDocument document = new PDDocument()) {
-                // Create a new page
-                PDPage page = new PDPage();
-                document.addPage(page);
+            try (Workbook workbook = new XSSFWorkbook();
+                FileOutputStream fos = new FileOutputStream(file)) {
 
-                // Initialize content stream
-                try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(50, 750);
-                    contentStream.showText("Loan Payment Schedule");
-                    contentStream.endText();
+            Sheet sheet = workbook.createSheet("Loan Schedule");
+            String[] headers = {"Month", "Interest", "Payment", "Balance"};
 
-                    contentStream.setFont(PDType1Font.HELVETICA, 12);
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(50, 730);
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            headerStyle.setFont(font);
 
-                    // Table headers
-                    String header = String.format("%-10s %-15s %-15s %-15s",
-                        "Month", "Interest", "Total Payment", "Remaining Balance");
-                    contentStream.showText(header);
-                    contentStream.newLineAtOffset(0, -20);
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
 
-                    // Table content
-                    for (PaymentSchedule ps : this.schedule) {
-                        String row = String.format("%-10s %-15.2f %-15.2f %-15.2f",
-                                ps.getMonth(),
-                                ps.getInterestPayment(),
-                                ps.getTotalPayment(),
-                                ps.getRemainingBalance());
-                        contentStream.showText(row);
-                        contentStream.newLineAtOffset(0, -15);
-                    }
-                    contentStream.endText();
-                }
+            // Fill in data
+            int rowNum = 1;
+            for (PaymentSchedule entry : schedule) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(entry.getMonth());
+                row.createCell(1).setCellValue(entry.getInterestPayment());
+                row.createCell(2).setCellValue(entry.getTotalPayment());
+                row.createCell(3).setCellValue(entry.getRemainingBalance());
+            }
 
-                // Save the document
-                document.save(file);
-                System.out.println("PDF saved: " + file.getAbsolutePath());
-            } catch (IOException ex) {
-                System.out.println("Error saving PDF: " + ex.getMessage());
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write to file
+            workbook.write(fos);
+
+            } catch (IOException e) {
+            e.printStackTrace();
             }
         }
     }
