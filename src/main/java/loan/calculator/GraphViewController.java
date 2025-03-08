@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -14,34 +16,28 @@ public class GraphViewController {
     @FXML private Button goBackButton;
     @FXML private LineChart<Number, Number> lineChart;
 
-    private PaymentSchedule[] schedule;
-
-    public void setSchedule(PaymentSchedule[] schedule) {
-        this.schedule = schedule;
-    }
+    PaymentSchedule[] schedule = LoanState.getInstance().getPaymentSchedule();
 
     public void initializeLineChart() {
         // Clear existing data in the chart (if any)
         lineChart.getData().clear();
         
         // // Create a data series for monthly payments
-        // XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        // series.setName("Monthly Payments");
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Mėnesinės įmokos");
 
-        // // Populate the series with data from the PaymentSchedule
-        // for (int i = 0; i < schedule.length; i++) {
-        //     series.getData().add(new XYChart.Data<>(i + 1, schedule[i].getTotalPayment()));
-        // }
+        // Populate the series with data from the PaymentSchedule
+        for (int i = 0; i < schedule.length - 1; i++) {
+            series.getData().add(new XYChart.Data<>(i + 1, schedule[i].getTotalPayment()));
+        }
 
-        // // Add the series to the chart
-        // lineChart.getData().add(series);
+        // Add the series to the chart
+        lineChart.getData().add(series);
 
-        // // Customize the chart axes labels
-        // NumberAxis xAxis = (NumberAxis) lineChart.getXAxis();
-        // xAxis.setLabel("Months");
+        // Customize the chart axes labels
+        NumberAxis xAxis = (NumberAxis) lineChart.getXAxis();
 
-        // NumberAxis yAxis = (NumberAxis) lineChart.getYAxis();
-        // yAxis.setLabel("Monthly Payment");
+        NumberAxis yAxis = (NumberAxis) lineChart.getYAxis();
     }
 
     @FXML

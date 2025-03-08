@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loan.calculator.GraphViewController">
-  <LineChart fx:id="lineChart" layoutX="150.0" layoutY="100.0" title="Payment Schedule" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <LineChart fx:id="lineChart" layoutX="150.0" layoutY="100.0" title="Mokėjimo grafikas" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <xAxis>
-      <NumberAxis label="Months" fx:id="xAxis" />
+      <NumberAxis label="Mėnesiai" fx:id="xAxis" />
     </xAxis>
     <yAxis>
-      <NumberAxis fx:id="yAxis" label="Monthly Payment" />
+      <NumberAxis fx:id="yAxis" label="Mėnesinė įmoka" />
     </yAxis>
   </LineChart>
    <Button fx:id="goBackButton" layoutX="63.0" layoutY="51.0" mnemonicParsing="false" onAction="#goBack" text="Atgal" />

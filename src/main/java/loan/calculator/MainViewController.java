@@ -220,6 +220,9 @@ public class MainViewController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GraphView.fxml"));
         Parent root = loader.load();
 
+        GraphViewController controller = loader.getController();
+        controller.initializeLineChart();
+
         // Set the new scene
         Stage stage = (Stage) showGraphButton.getScene().getWindow();
         Scene scene = new Scene(root);

@@ -1,7 +1,7 @@
 package loan.calculator;
 
 public class LoanState {
-    private static LoanState instance = new LoanState();
+    private final static LoanState instance = new LoanState();
 
     private String loanAmount;
     private String termYears;
@@ -14,7 +14,7 @@ public class LoanState {
     private LoanState() {}
 
     public static LoanState getInstance() {
-        return instance;
+        return LoanState.instance;
     }
 
     // Add getters and setters for your fields
