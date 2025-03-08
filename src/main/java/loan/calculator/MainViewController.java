@@ -162,8 +162,8 @@ public class MainViewController {
         }
         try {
             int months = Integer.parseInt(this.fromMonth.getText());
-            if (months <= 0) {
-                this.fromMonth.setText("0");
+            if (months < 1) {
+                this.fromMonth.setText("1");
             }
         } 
         catch (NumberFormatException exception) {
@@ -178,8 +178,8 @@ public class MainViewController {
         }
         try {
             int months = Integer.parseInt(this.toMonth.getText());
-            if (months <= 0) {
-                this.toMonth.setText("0");
+            if (months < 1) {
+                this.toMonth.setText("1");
             }
         } 
         catch (NumberFormatException exception) {
@@ -208,19 +208,19 @@ public class MainViewController {
             this.delay.setText("0");
         }
         if (this.fromMonth.getText().length() == 0) {
-            this.fromMonth.setText("0");
+            this.fromMonth.setText("1");
         }
-        if (Integer.parseInt(this.fromMonth.getText()) > Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())) {
-            this.fromMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())));
+        if (Integer.parseInt(this.fromMonth.getText()) > Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())) {
+            this.fromMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())));
         }
         if (this.toMonth.getText().length() == 0) {
-            this.toMonth.setText("0");
+            this.toMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())));
         }
         if (Integer.parseInt(this.toMonth.getText()) < Integer.parseInt(this.fromMonth.getText())) {
             this.toMonth.setText(String.valueOf(Integer.parseInt(this.fromMonth.getText())));
         }
-        if (Integer.parseInt(this.toMonth.getText()) > Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())) {
-            this.toMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) + Integer.parseInt(this.termMonths.getText())));
+        if (Integer.parseInt(this.toMonth.getText()) > Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())) {
+            this.toMonth.setText(String.valueOf(Integer.parseInt(this.termYears.getText()) * 12 + Integer.parseInt(this.termMonths.getText())));
         }
 
         try {
@@ -230,19 +230,20 @@ public class MainViewController {
             double rate = Double.parseDouble(this.annualRate.getText());
             String scheduleType = this.scheduleType.getValue();
             int delay = Integer.parseInt(this.delay.getText());
-            int fromMonth = Integer.parseInt(this.fromMonth.getText());
-            int toMonth = Integer.parseInt(this.fromMonth.getText());
+            int fromMonth = Integer.parseInt(this.fromMonth.getText()) - 1;
+            int toMonth = Integer.parseInt(this.toMonth.getText()) - 1;
 
             ObservableList<PaymentSchedule> data = FXCollections.observableArrayList();
 
             Loan loan;
             if ("Anuitetas".equals(scheduleType)) {
-                loan = new AnnuityLoan(amount, years, months, rate, delay);
+                loan = new AnnuityLoan(amount, years, months, rate, delay, fromMonth, toMonth);
             }
             else {
-                loan = new LinearLoan(amount, years, months, rate, delay);
+                loan = new LinearLoan(amount, years, months, rate, delay, fromMonth, toMonth);
             }
             this.schedule = loan.getPaymentSchedule();
+            
             data.addAll(this.schedule);
 
             scheduleTable.getItems().clear();
